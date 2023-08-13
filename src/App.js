@@ -1,10 +1,10 @@
-import firebase from 'firebase/App';
+import firebase from 'firebase/firebase-app';
 import 'firebase/firestore';
 import 'firebase/auth';
 
-import useAuthState from 'react-firebase-hooks/auth';
-import useCollectionData from 'react-firebase-hooks/firestore';
-
+import {useAuthState} from 'react-firebase-hooks/auth';
+import {useCollectionData} from 'react-firebase-hooks/firestore';
+import ChatRoom from './ChatRoom';
 import './App.css';
 
 firebase.initializeApp ({
@@ -24,9 +24,27 @@ function App() {
     const [user] = useAuthState(authentification);
   return (
     <div className="App">
-     
+     {user ? <ChatRoom/> : <SignIn/>}
     </div>
   );
 }
-
 export default App;
+
+function SignIn() {
+    const signInWithGoogle = () => {
+     const provider = new firebase.auth.GoogleAuthProvider();
+     authentification.signInWithPopup(provider);   
+    }
+    return (
+        <button onClick={signInWithGoogle}> Sign in with Google </button>
+    )
+
+    function SignOut () {
+
+        return authentification.currentUser && (
+            <button onClick={()=> authentification.signOut()}> Sign Out </button>    
+        )
+    }
+}
+
+
